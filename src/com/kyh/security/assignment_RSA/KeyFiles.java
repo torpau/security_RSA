@@ -1,10 +1,9 @@
 package com.kyh.security.assignment_RSA;
 
-import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.stream.Collectors;
+
 
 public class KeyFiles {
 
@@ -43,7 +42,7 @@ public class KeyFiles {
 
     public ArrayList useSavedKeys() {
 
-        File folder = new File("./src/com/kyh/security/assignment_RSA/keyFiles/");
+        File folder = new File(Main.folder);
         ArrayList<String> uniqueFiles = new ArrayList<>();
         
         try {
@@ -75,7 +74,7 @@ public class KeyFiles {
                             case 1:
                                 return uniqueFiles;
                             case 2:
-                                System.out.println("test");
+                                uniqueFiles.clear();
                                 return uniqueFiles;
                             default:
                                 System.out.println("Bad input");
@@ -90,7 +89,7 @@ public class KeyFiles {
     }
 
 
-    String getNewKeyName(){
+    String getKeyNameToUse(){
         Scanner sc = new Scanner(System.in);
         while(sc.hasNextLine()){
             String nextLine = sc.nextLine();
@@ -100,4 +99,6 @@ public class KeyFiles {
         }
         return "";
     }
+
+
 }

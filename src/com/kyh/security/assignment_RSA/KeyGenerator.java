@@ -19,7 +19,8 @@ public class KeyGenerator {
 
         KeyPair publicKey = new KeyPair(e, n);
         KeyPair privateKey = new KeyPair(d, n);
-        //saveKey(fileName + "_pub.key", publicKey);
-        //saveKey(fileName + "_priv.key", privateKey);
+        KeyFiles keyFiles = new KeyFiles();
+        keyFiles.saveKey(fileName + "_pub.key", publicKey);
+        keyFiles.saveKey(fileName + "_pri.key", privateKey);
     }
 }
