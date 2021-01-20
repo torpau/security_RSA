@@ -4,6 +4,11 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 
 public class KeyGenerator {
+    Main main;
+
+    KeyGenerator(Main main){
+        this.main = main;
+    }
 
     void generateKeys(String fileName, int bitLength){
         SecureRandom rand = new SecureRandom();
@@ -19,7 +24,7 @@ public class KeyGenerator {
 
         KeyPair publicKey = new KeyPair(e, n);
         KeyPair privateKey = new KeyPair(d, n);
-        KeyFiles keyFiles = new KeyFiles();
+        KeyFiles keyFiles = new KeyFiles(main);
         keyFiles.saveKey(fileName + "_pub.key", publicKey);
         keyFiles.saveKey(fileName + "_pri.key", privateKey);
     }

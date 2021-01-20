@@ -6,12 +6,10 @@ import java.util.Scanner;
 
 
 public class KeyFiles {
-
-    KeyFiles(){
-
+    Main main;
+    KeyFiles(Main main){
+        this.main = main;
     }
-
-
 
     void saveKey(String fileName, KeyPair key){
         try {
@@ -42,7 +40,7 @@ public class KeyFiles {
 
     public ArrayList useSavedKeys() {
 
-        File folder = new File(Main.folder);
+        File folder = new File(main.getFolder());
         ArrayList<String> uniqueFiles = new ArrayList<>();
         
         try {
@@ -50,12 +48,21 @@ public class KeyFiles {
                 File[] listOfFiles = folder.listFiles();
                 if (listOfFiles != null && listOfFiles.length > 0) {
                     for (File elements : listOfFiles) {
-                        String fName = elements.getName().substring(0, elements.getName().length() - 8);
-                        if (!uniqueFiles.contains(fName)) {
-                            uniqueFiles.add(fName);
+                        if (elements.isFile() && elements.canRead()) {
+                            String fName = elements.getName().substring(0, elements.getName().length() - 8);
+                            if (!uniqueFiles.contains(fName)) {
+                                uniqueFiles.add(fName);
+                            }
                         }
                     }
-                    System.out.println("#   You have the following keys saved:");
+                }
+            }
+
+                /*
+
+
+
+                    //System.out.println("#   You have the following keys saved:");
 
                     for (File fileName : listOfFiles) {
                         if (fileName.isFile() && fileName.canRead()) {
@@ -82,6 +89,8 @@ public class KeyFiles {
                     }
                 }
             }
+
+                 */
         } catch (Exception e) {
             e.printStackTrace();
         }
