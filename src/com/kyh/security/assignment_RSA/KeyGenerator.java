@@ -10,7 +10,8 @@ public class KeyGenerator {
         this.main = main;
     }
 
-    void generateKeys(String fileName, int bitLength){
+
+    void generateKeys(String fileName, int bitLength, Menu menu){
         SecureRandom rand = new SecureRandom();
         BigInteger p = new BigInteger(bitLength/2, 100, rand);
         BigInteger q = new BigInteger(bitLength/2, 100, rand);
@@ -23,9 +24,12 @@ public class KeyGenerator {
         BigInteger d = e.modInverse(phiN);
 
         KeyPair publicKey = new KeyPair(e, n);
+        menu.setPublicKey(publicKey);
         KeyPair privateKey = new KeyPair(d, n);
+        menu.setPrivateKey(privateKey);
         KeyFiles keyFiles = new KeyFiles(main);
         keyFiles.saveKey(fileName + "_pub.key", publicKey);
         keyFiles.saveKey(fileName + "_pri.key", privateKey);
     }
+
 }

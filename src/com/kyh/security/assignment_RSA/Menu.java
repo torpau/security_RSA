@@ -10,6 +10,8 @@ public class Menu {
     private final Main main;
     private int choiceOfMenu = 101;
     private ArrayList<String> listOfKeys;
+    private KeyPair publicKey = null;
+    private KeyPair privateKey = null;
 
     Menu(Main main){
         this.main = main;
@@ -17,6 +19,10 @@ public class Menu {
 
     public int getChoiceOfMenu() { return choiceOfMenu; }
     public void setChoiceOfMenu(int choiceOfMenu) { this.choiceOfMenu = choiceOfMenu; }
+
+    public void setPublicKey(KeyPair publicKey) { this.publicKey = publicKey; }
+    public void setPrivateKey(KeyPair privateKey) { this.privateKey = privateKey; }
+
 
     void whereToNavigate(){
         while(true) {
@@ -34,8 +40,6 @@ public class Menu {
         }
     }
 
-
-
     void menu101() {
         System.out.println("Menu 101");
         boolean loop = true;
@@ -47,27 +51,31 @@ public class Menu {
             System.out.println("#   You have the following saved keys:");
             System.out.println("#");
             listOfKeys
-                    .forEach(e -> System.out.println("#   " + (char)45 + " " + e));
-        }
-        System.out.println("#");
-        System.out.println("#   Would you like to use any of these?");
-        System.out.println("#");
-        System.out.println("#   1. YES");
-        System.out.println("#   2. NO");
-        Scanner userInput = new Scanner(System.in);
-        while(loop){
-            switch (userInput.nextInt()) {
-                case 1:
-                    choiceOfMenu = 201;
-                    loop = false;
-                    break;
-                case 2:
-                    choiceOfMenu = 202;
-                    loop = false;
-                    break;
-                default:
-                    System.out.println("Bad input");
+                    .forEach(e -> System.out.println("#   " + (char) 45 + " " + e));
+
+            System.out.println("#");
+            System.out.println("#   Would you like to use any of these?");
+            System.out.println("#");
+            System.out.println("#   1. YES");
+            System.out.println("#   2. NO");
+            Scanner userInput = new Scanner(System.in);
+            while (loop) {
+                switch (userInput.nextInt()) {
+                    case 1 -> {
+                        choiceOfMenu = 201;
+                        loop = false;
+                    }
+                    case 2 -> {
+                        choiceOfMenu = 202;
+                        loop = false;
+                    }
+                    default -> System.out.println("Bad input");
+                }
             }
+        } else {
+            System.out.println("#   ");
+            System.out.println("#   You have no saved keys!");
+            choiceOfMenu = 202;
         }
     }
 
@@ -86,7 +94,6 @@ public class Menu {
         System.out.println("#");
         System.out.println("#   ...would you like to use?");
 
-
         Scanner userInput = new Scanner(System.in);
 
         boolean usableKeyName = false;
@@ -102,8 +109,8 @@ public class Menu {
 
                 KeyFiles keyFiles = new KeyFiles(main);
                 String test = main.getFolder() + key + "_pub.key";
-                KeyPair publicKey = keyFiles.readKey(main.getFolder() + key + "_pub.key");
-                KeyPair privateKey = keyFiles.readKey(main.getFolder() + key + "_pri.key");
+                publicKey = keyFiles.readKey(main.getFolder() + key + "_pub.key");
+                privateKey = keyFiles.readKey(main.getFolder() + key + "_pri.key");
                 choiceOfMenu = 301;
                 break;
             } else {
@@ -127,16 +134,15 @@ public class Menu {
         Scanner userInput = new Scanner(System.in);
         while (loop) {
             switch (userInput.nextInt()) {
-                case 1:
+                case 1 -> {
                     choiceOfMenu = 302;
                     loop = false;
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     choiceOfMenu = 901;
                     loop = false;
-                    break;
-                default:
-                    System.out.println("Bad input");
+                }
+                default -> System.out.println("Bad input");
             }
         }
     }
@@ -147,30 +153,33 @@ public class Menu {
         System.out.println("#");
         System.out.println("#");
         System.out.println("#");
-        System.out.println("#   What do you want to do?");
+        System.out.println("#   What do you want to do now?");
         System.out.println("#");
         System.out.println("#   1. Encrypt a typed message?");
         System.out.println("#   2. Decrypt a typed message?");
-
+        System.out.println("#   7. Change key!");
 
         System.out.println("#   9. Quit");
         Scanner userInput = new Scanner(System.in);
         while(loop){
             switch (userInput.nextInt()) {
-                case 1:
+                case 1 -> {
                     choiceOfMenu = 401;
                     loop = false;
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     choiceOfMenu = 402;
                     loop = false;
-                    break;
-                case 9:
+                }
+                case 7 -> {
+                    choiceOfMenu = 101;
+                    loop = false;
+                }
+                case 9 -> {
                     choiceOfMenu = 901;
                     loop = false;
-                    break;
-                default:
-                    System.out.println("Bad input");
+                }
+                default -> System.out.println("Bad input");
             }
         }
     }
@@ -197,7 +206,7 @@ public class Menu {
                 if (matcher.matches()) {
                     //generate
                     KeyGenerator keyGenerator = new KeyGenerator(main);
-                    keyGenerator.generateKeys(main.getFolder() + key, main.getBitLength());
+                    keyGenerator.generateKeys(main.getFolder() + key, main.getBitLength(), this);
                     choiceOfMenu = 301;
                     break;
                 } else {
@@ -211,12 +220,56 @@ public class Menu {
 
     void menu401() {
         System.out.println("Menu 401");
-        boolean loop = true;
+        System.out.println("#");
+        System.out.println("#");
+        System.out.println("#");
+        System.out.println("#   Please enter the message you want to encrypt:");
+        System.out.println("#");
+
+        Scanner userIn = new Scanner(System.in);
+        while(userIn.hasNextLine()) {
+            String message = userIn.nextLine();
+            if (!message.isEmpty()) {
+                Crypto crypto = new Crypto(main);
+
+                String encrypted = crypto.encrypt(message, privateKey);
+                System.out.println("Here you go! Your encrypted message:");
+                System.out.println(encrypted);
+
+
+                choiceOfMenu = 301;
+                break;
+            } else {
+                System.out.println("Bad input");
+            }
+        }
     }
 
     void menu402() {
         System.out.println("Menu 402");
-        boolean loop = true;
+        System.out.println("#");
+        System.out.println("#");
+        System.out.println("#");
+        System.out.println("#   Please enter the message you want to decrypt:");
+        System.out.println("#");
+
+        Scanner userIn = new Scanner(System.in);
+        while(userIn.hasNextLine()) {
+            String message = userIn.nextLine();
+            if (!message.isEmpty()) {
+                Crypto crypto = new Crypto(main);
+
+                String decrypted = crypto.decrypt(message, publicKey);
+                System.out.println("Here you go! Your decrypted message:");
+                System.out.println(decrypted);
+
+
+                choiceOfMenu = 301;
+                break;
+            } else {
+                System.out.println("Bad input");
+            }
+        }
     }
 
     void menu901() {

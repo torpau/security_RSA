@@ -2,14 +2,15 @@ package com.kyh.security.assignment_RSA;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 
 public class KeyFiles {
     Main main;
+
     KeyFiles(Main main){
         this.main = main;
     }
+
 
     void saveKey(String fileName, KeyPair key){
         try {
@@ -39,7 +40,6 @@ public class KeyFiles {
     }
 
     public ArrayList useSavedKeys() {
-
         File folder = new File(main.getFolder());
         ArrayList<String> uniqueFiles = new ArrayList<>();
         
@@ -57,57 +57,10 @@ public class KeyFiles {
                     }
                 }
             }
-
-                /*
-
-
-
-                    //System.out.println("#   You have the following keys saved:");
-
-                    for (File fileName : listOfFiles) {
-                        if (fileName.isFile() && fileName.canRead()) {
-                            System.out.println("#   " + fileName.getName());
-                        }
-                    }
-
-                    System.out.println("#");
-                    System.out.println("#   Would you like to use any of these?");
-                    System.out.println("#   1. YES");
-                    System.out.println("#   2. NO");
-                    Scanner sc = new Scanner(System.in);
-                    while (sc.hasNextInt()) {
-                        int choice = sc.nextInt();
-                        switch (choice) {
-                            case 1:
-                                return uniqueFiles;
-                            case 2:
-                                uniqueFiles.clear();
-                                return uniqueFiles;
-                            default:
-                                System.out.println("Bad input");
-                        }
-                    }
-                }
-            }
-
-                 */
         } catch (Exception e) {
             e.printStackTrace();
         }
         return uniqueFiles;
     }
-
-
-    String getKeyNameToUse(){
-        Scanner sc = new Scanner(System.in);
-        while(sc.hasNextLine()){
-            String nextLine = sc.nextLine();
-            if (!nextLine.isEmpty()) {
-                return nextLine.toLowerCase();
-            }
-        }
-        return "";
-    }
-
 
 }
