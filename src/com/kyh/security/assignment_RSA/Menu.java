@@ -60,13 +60,14 @@ public class Menu {
     }
 
     void menu101() {
-        System.out.println("Menu 101");
         boolean loop = true;
-
+        border();
         KeyFiles keyFiles = new KeyFiles(main);
         listOfKeys = keyFiles.useSavedKeys();
 
         if (!listOfKeys.isEmpty()) {
+            System.out.println("#");
+            System.out.println("#");
             System.out.println("#   You have the following saved keys:");
             System.out.println("#");
             listOfKeys
@@ -94,13 +95,17 @@ public class Menu {
         } else {
             System.out.println("#   ");
             System.out.println("#   You have no saved keys!");
+            try {
+                Thread.sleep(2400);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             choiceOfMenu = 202;
         }
     }
 
     void menu201() {
-        System.out.println("Menu 201");
-
+        border();
         if (!listOfKeys.isEmpty()) {
             System.out.println("#");
             System.out.println("#");
@@ -135,6 +140,11 @@ public class Menu {
                     presentKeyType = "_pri.key";
                     presentKeyKey = privateKey;
                 }
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 choiceOfMenu = 301;
                 break;
             } else {
@@ -144,10 +154,9 @@ public class Menu {
     }
 
     void menu202() {
-        System.out.println("Menu 202");
+        border();
         boolean loop = true;
 
-        System.out.println("#");
         System.out.println("#");
         System.out.println("#");
         System.out.println("#   You need to generate a new");
@@ -172,9 +181,8 @@ public class Menu {
     }
 
     void menu301(){
-        System.out.println("Menu 301");
+        border();
         boolean loop = true;
-        System.out.println("#");
         System.out.println("#");
         System.out.println("#");
         System.out.println("#   What do you want to do now?");
@@ -218,9 +226,7 @@ public class Menu {
     }
 
     void menu302() {
-        System.out.println("Menu 302");
-
-        System.out.println("#");
+        border();
         System.out.println("#");
         System.out.println("#");
         System.out.println("#   Please, name you key:");
@@ -246,6 +252,11 @@ public class Menu {
                         presentKeyType = "_pri.key";
                         presentKeyKey = privateKey;
                     }
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     choiceOfMenu = 301;
                     break;
                 } else {
@@ -268,7 +279,8 @@ public class Menu {
                 presentKeyKey = publicKey;
             }
         }
-        System.out.println("Menu 401");
+        border();
+        System.out.println("#");
         System.out.println("#");
         System.out.println("#   >> Loaded key: " + presentKey + presentKeyType);
         System.out.println("#");
@@ -283,6 +295,11 @@ public class Menu {
                 String encrypted = crypto.encrypt(message, presentKeyKey);
                 System.out.println("#   Here you go! Your encrypted message:");
                 System.out.println(encrypted);
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 choiceOfMenu = 301;
                 break;
             } else {
@@ -302,8 +319,7 @@ public class Menu {
                 presentKeyKey = publicKey;
             }
         }
-        System.out.println("Menu 402");
-        System.out.println("#");
+        border();
         System.out.println("#");
         System.out.println("#");
         System.out.println("#   Please enter the message you want to decrypt:");
@@ -317,6 +333,11 @@ public class Menu {
                 String decrypted = crypto.decrypt(message, presentKeyKey);
                 System.out.println("#   Here you go! Your decrypted message:");
                 System.out.println(decrypted);
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 choiceOfMenu = 301;
                 break;
             } else {
@@ -326,10 +347,8 @@ public class Menu {
     }
 
     void menu403() {
-        System.out.println("Menu 403");
+        border();
         boolean loop = true;
-
-        System.out.println("#");
         System.out.println("#");
         System.out.println("#");
         System.out.println("#   What do you want to encrypt from?");
@@ -363,8 +382,7 @@ public class Menu {
                 presentKeyKey = publicKey;
             }
         }
-        System.out.println("Menu 404");
-        System.out.println("#");
+        border();
         System.out.println("#");
         System.out.println("#");
         System.out.println("#   Please enter the message you want to encrypt:");
@@ -392,6 +410,11 @@ public class Menu {
                 }
 
                 System.out.println("#   Saved your encryption to file: " + strTime + ".txt");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 choiceOfMenu = 301;
                 break;
             } else {
@@ -411,8 +434,7 @@ public class Menu {
                 presentKeyKey = publicKey;
             }
         }
-        System.out.println("Menu 405");
-        System.out.println("#");
+        border();
         System.out.println("#");
         System.out.println("#");
         System.out.println("#   Here is a list of un-encrypted txt files:");
@@ -458,7 +480,7 @@ public class Menu {
             }
             if (uniqueFiles.contains(key)) {
                 usableKeyName = true;
-                System.out.println("all good");
+
 
                 String message ="";
                 String ff = main.getFolder() + "preCrypto/" + key;
@@ -489,6 +511,11 @@ public class Menu {
                     e.printStackTrace();
                 }
                 System.out.println("#   Saved encrypted file as: " + strTime + ".txt");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 choiceOfMenu = 301;
                 break;
             } else {
@@ -508,8 +535,7 @@ public class Menu {
                 presentKeyKey = publicKey;
             }
         }
-        System.out.println("Menu 406");
-        System.out.println("#");
+        border();
         System.out.println("#");
         System.out.println("#");
         System.out.println("#   Here is a list of encrypted txt files:");
@@ -570,7 +596,11 @@ public class Menu {
                 } catch (IOException i){
                     i.printStackTrace();
                 }
-
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 choiceOfMenu = 301;
                 break;
             } else {
@@ -582,8 +612,7 @@ public class Menu {
     int menu601() {
         boolean loop = true;
         int choice = 0;
-        System.out.println("Menu 601");
-        System.out.println("#");
+        border();
         System.out.println("#");
         System.out.println("#");
         System.out.println("#   Loaded key is: " + presentKey);
@@ -610,12 +639,17 @@ public class Menu {
     }
 
     void menu901() {
-        System.out.println("Menu 901");
-        System.out.println("#");
+        border();
         System.out.println("#");
         System.out.println("#");
         System.out.println("#   Okay... bye bye!");
         System.exit(0);
+    }
+
+    void border(){
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        System.out.println("        ..:: RSA assignment ::..");
+        System.out.println("########################################");
     }
 
 }

@@ -1,2 +1,6 @@
 .idea
 out
+keyFiles/keyCrypto
+keyFiles/postCrypto
+!keyFiles/keyCrypto/torsten_pub.key
+

@@ -9,10 +9,6 @@ public class Main {
 
 
     Main(){
-        System.out.println("\n\n");
-        System.out.println("    ..:: RSA assignment ::..    ");
-        System.out.println("########################################");
-
         Menu menu = new Menu(this);
         menu.whereToNavigate();
     }
