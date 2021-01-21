@@ -1,6 +1,10 @@
 package com.kyh.security.assignment_RSA;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,6 +38,10 @@ public class Menu {
                 case 302 -> menu302();
                 case 401 -> menu401();
                 case 402 -> menu402();
+                case 403 -> menu403();
+                case 404 -> menu404();
+                case 405 -> menu405();
+                case 406 -> menu406();
                 case 901 -> menu901();
 
             }
@@ -109,8 +117,8 @@ public class Menu {
 
                 KeyFiles keyFiles = new KeyFiles(main);
                 String test = main.getFolder() + key + "_pub.key";
-                publicKey = keyFiles.readKey(main.getFolder() + key + "_pub.key");
-                privateKey = keyFiles.readKey(main.getFolder() + key + "_pri.key");
+                publicKey = keyFiles.readKey(main.getFolder() + "keyCrypto/" + key + "_pub.key");
+                privateKey = keyFiles.readKey(main.getFolder() + "keyCrypto/" + key + "_pri.key");
                 choiceOfMenu = 301;
                 break;
             } else {
@@ -155,11 +163,12 @@ public class Menu {
         System.out.println("#");
         System.out.println("#   What do you want to do now?");
         System.out.println("#");
-        System.out.println("#   1. Encrypt a typed message?");
-        System.out.println("#   2. Decrypt a typed message?");
+        System.out.println("#   1. Encrypt a typed message!");
+        System.out.println("#   2. Decrypt a typed message!");
+        System.out.println("#   3. Encrypt a message to a txt file!");
+        System.out.println("#   4. Decrypt a message from a txt file!");
         System.out.println("#   7. Change key!");
-
-        System.out.println("#   9. Quit");
+        System.out.println("#   9. Exit");
         Scanner userInput = new Scanner(System.in);
         while(loop){
             switch (userInput.nextInt()) {
@@ -171,8 +180,16 @@ public class Menu {
                     choiceOfMenu = 402;
                     loop = false;
                 }
+                case 3 -> {
+                    choiceOfMenu = 403;
+                    loop = false;
+                }
+                case 4 -> {
+                    choiceOfMenu = 406;
+                    loop = false;
+                }
                 case 7 -> {
-                    choiceOfMenu = 101;
+                    choiceOfMenu = 201;
                     loop = false;
                 }
                 case 9 -> {
@@ -204,9 +221,8 @@ public class Menu {
                 Pattern pattern = Pattern.compile("[a-z0-9]*");
                 Matcher matcher = pattern.matcher(key);
                 if (matcher.matches()) {
-                    //generate
                     KeyGenerator keyGenerator = new KeyGenerator(main);
-                    keyGenerator.generateKeys(main.getFolder() + key, main.getBitLength(), this);
+                    keyGenerator.generateKeys(main.getFolder() + "keyCrypto/" + key, main.getBitLength(), this);
                     choiceOfMenu = 301;
                     break;
                 } else {
@@ -262,6 +278,224 @@ public class Menu {
                 String decrypted = crypto.decrypt(message, publicKey);
                 System.out.println("Here you go! Your decrypted message:");
                 System.out.println(decrypted);
+
+
+                choiceOfMenu = 301;
+                break;
+            } else {
+                System.out.println("Bad input");
+            }
+        }
+    }
+
+    void menu403() {
+        System.out.println("Menu 403");
+        boolean loop = true;
+
+        System.out.println("#");
+        System.out.println("#");
+        System.out.println("#");
+        System.out.println("#   What do you want to encrypt from?");
+        System.out.println("#");
+        System.out.println("#   1. A typed message");
+        System.out.println("#   2. A txt file (*.txt)");
+        Scanner userInput = new Scanner(System.in);
+        while (loop) {
+            switch (userInput.nextInt()) {
+                case 1 -> {
+                    choiceOfMenu = 404;
+                    loop = false;
+                }
+                case 2 -> {
+                    choiceOfMenu = 405;
+                    loop = false;
+                }
+                default -> System.out.println("Bad input");
+            }
+        }
+    }
+
+    void menu404() {
+        System.out.println("Menu 404");
+        System.out.println("#");
+        System.out.println("#");
+        System.out.println("#");
+        System.out.println("#   Please enter the message you want to encrypt:");
+        System.out.println("#");
+
+        Scanner userIn = new Scanner(System.in);
+        while(userIn.hasNextLine()) {
+            String message = userIn.nextLine();
+            if (!message.isEmpty()) {
+                Crypto crypto = new Crypto(main);
+
+                String encrypted = crypto.encrypt(message, privateKey);
+
+                Date date = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                String strTime = dateFormat.format(date);
+
+                FileOutputStream fileOut = null;
+                try {
+                    fileOut = new FileOutputStream(main.getFolder() + "postCrypto/" + strTime + ".txt");
+                    ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                    out.writeObject(encrypted);
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("saved key as: " + main.getFolder() + "postCrypto/" + strTime + ".txt");
+
+                choiceOfMenu = 301;
+                break;
+            } else {
+                System.out.println("Bad input");
+            }
+        }
+    }
+
+    void menu405() {
+        System.out.println("Menu 405");
+        System.out.println("#");
+        System.out.println("#");
+        System.out.println("#");
+        System.out.println("#   Here is a list of un-encrypted txt files:");
+        System.out.println("#");
+
+        File folder = new File(main.getFolder() + "preCrypto/");
+        ArrayList<String> uniqueFiles = new ArrayList<>();
+
+        try {
+            if (folder.isDirectory()) {
+                File[] listOfFiles = folder.listFiles();
+                if (listOfFiles != null && listOfFiles.length > 0) {
+                    for (File elements : listOfFiles) {
+                        if (elements.isFile() && elements.canRead()) {
+                            if (elements.getName().substring(elements.getName().length() - 4).equals(".txt")) {
+                                uniqueFiles.add(elements.getName());
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        uniqueFiles
+                .forEach(e -> System.out.println("#   " + (char) 45 + " " + e));
+
+        System.out.println("#");
+        System.out.println("#   What file do you want to encrypt?");
+
+        Scanner userInput = new Scanner(System.in);
+
+        boolean usableKeyName = false;
+        String keyName = "";
+        while(userInput.hasNextLine()) {
+            String key = userInput.nextLine();
+            if (!key.isEmpty()) {
+                key = key.toLowerCase();
+                if (key.length() > 4 && !key.substring(key.length()-4).equals(".txt")){
+                    key += ".txt";
+                }
+            }
+            if (uniqueFiles.contains(key)) {
+                usableKeyName = true;
+                System.out.println("all good");
+
+                String message ="";
+                String ff = main.getFolder() + "preCrypto/" + key;
+                //läsa från txt-filen.
+
+                try {
+                    Scanner sc = new Scanner(new File(ff));
+                    while (sc.hasNextLine()){
+                        message += sc.nextLine() + "\n";
+                    }
+                } catch (IOException i){
+                        i.printStackTrace();
+                }
+
+                //kryptera och läsa till ny fil
+                Crypto crypto = new Crypto(main);
+
+                String encrypted = crypto.encrypt(message, privateKey);
+
+                Date date = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                String strTime = dateFormat.format(date);
+
+                FileOutputStream fileOut = null;
+                try {
+                    fileOut = new FileOutputStream(main.getFolder() + "postCrypto/" + strTime + ".txt");
+                    ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                    out.writeObject(encrypted);
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("saved key as: " + main.getFolder() + "postCrypto/" + strTime + ".txt");
+                //
+
+
+
+
+                choiceOfMenu = 301;
+                break;
+            } else {
+                System.out.println("Bad input");
+            }
+        }
+    }
+
+    void menu406() {
+        System.out.println("Menu 406");
+        System.out.println("#");
+        System.out.println("#");
+        System.out.println("#");
+        System.out.println("#   Here is a list of encrypted txt files:");
+        System.out.println("#");
+
+        File folder = new File(main.getFolder() + "postCrypto/");
+        ArrayList<String> uniqueFiles = new ArrayList<>();
+
+        try {
+            if (folder.isDirectory()) {
+                File[] listOfFiles = folder.listFiles();
+                if (listOfFiles != null && listOfFiles.length > 0) {
+                    for (File elements : listOfFiles) {
+                        if (elements.isFile() && elements.canRead()) {
+                            uniqueFiles.add(elements.getName());
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        uniqueFiles
+                .forEach(e -> System.out.println("#   " + (char) 45 + " " + e));
+
+        System.out.println("#");
+        System.out.println("#   What file do you want to try to decrypt?");
+
+        Scanner userInput = new Scanner(System.in);
+
+        boolean usableKeyName = false;
+        String keyName = "";
+        while(userInput.hasNextLine()) {
+            String key = userInput.nextLine();
+            if (!key.isEmpty()) {
+                key = key.toLowerCase();
+                if (key.length() > 4 && !key.substring(key.length() - 4).equals(".txt")) {
+                    key += ".txt";
+                }
+            }
+            if (uniqueFiles.contains(key)) {
+                usableKeyName = true;
+                System.out.println("all good");
 
 
                 choiceOfMenu = 301;

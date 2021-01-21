@@ -40,7 +40,7 @@ public class KeyFiles {
     }
 
     public ArrayList useSavedKeys() {
-        File folder = new File(main.getFolder());
+        File folder = new File(main.getFolder() + "keyCrypto/");
         ArrayList<String> uniqueFiles = new ArrayList<>();
         
         try {
@@ -49,9 +49,11 @@ public class KeyFiles {
                 if (listOfFiles != null && listOfFiles.length > 0) {
                     for (File elements : listOfFiles) {
                         if (elements.isFile() && elements.canRead()) {
-                            String fName = elements.getName().substring(0, elements.getName().length() - 8);
-                            if (!uniqueFiles.contains(fName)) {
-                                uniqueFiles.add(fName);
+                            if (elements.getName().substring(elements.getName().length() - 4).equals(".key")) {
+                                String fName = elements.getName().substring(0, elements.getName().length() - 8);
+                                if (!uniqueFiles.contains(fName)) {
+                                    uniqueFiles.add(fName);
+                                }
                             }
                         }
                     }
