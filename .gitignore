@@ -1,6 +1,6 @@
 .idea
 out
-keyFiles/keyCrypto/*
-keyFiles/postCrypto/*
-!keyFiles/keyCrypto/torsten_pub.key
+src/com/kyh/security/assignment_RSA/keyFiles/keyCrypto/*
+src/com/kyh/security/assignment_RSA/keyFiles/keyFiles/postCrypto/*
+!src/com/kyh/security/assignment_RSA/keyFiles/keyCrypto/torsten_pub.key
 
