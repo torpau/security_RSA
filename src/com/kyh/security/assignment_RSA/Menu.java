@@ -2,6 +2,8 @@ package com.kyh.security.assignment_RSA;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +16,9 @@ public class Menu {
     private final Main main;
     private int choiceOfMenu = 101;
     private ArrayList<String> listOfKeys;
+    private String presentKey = "";
+    private String presentKeyType = "";
+    private KeyPair presentKeyKey = null;
     private KeyPair publicKey = null;
     private KeyPair privateKey = null;
 
@@ -26,6 +31,12 @@ public class Menu {
 
     public void setPublicKey(KeyPair publicKey) { this.publicKey = publicKey; }
     public void setPrivateKey(KeyPair privateKey) { this.privateKey = privateKey; }
+
+    public String getPresentKey() { return presentKey; }
+    public void setPresentKey(String presentKey) { this.presentKey = presentKey; }
+
+    public String getPresentKeyType() { return presentKeyType; }
+    public void setPresentKeyType(String presentKeyType) { this.presentKeyType = presentKeyType; }
 
 
     void whereToNavigate(){
@@ -105,7 +116,6 @@ public class Menu {
         Scanner userInput = new Scanner(System.in);
 
         boolean usableKeyName = false;
-        String keyName = "";
         while(userInput.hasNextLine()) {
             String key = userInput.nextLine();
             if (!key.isEmpty()) {
@@ -113,12 +123,18 @@ public class Menu {
             }
             if (listOfKeys.contains(key)) {
                 usableKeyName = true;
-                System.out.println("all good");
 
                 KeyFiles keyFiles = new KeyFiles(main);
                 String test = main.getFolder() + key + "_pub.key";
                 publicKey = keyFiles.readKey(main.getFolder() + "keyCrypto/" + key + "_pub.key");
                 privateKey = keyFiles.readKey(main.getFolder() + "keyCrypto/" + key + "_pri.key");
+                if(publicKey != null && privateKey != null){
+                    System.out.println("#   Loaded public  key: "  + key + "_pub.key" );
+                    System.out.println("#   Loaded private key: "  + key + "_pri.key" );
+                    presentKey = key;
+                    presentKeyType = "_pri.key";
+                    presentKeyKey = privateKey;
+                }
                 choiceOfMenu = 301;
                 break;
             } else {
@@ -202,7 +218,7 @@ public class Menu {
     }
 
     void menu302() {
-        System.out.println("Menu 401");
+        System.out.println("Menu 302");
 
         System.out.println("#");
         System.out.println("#");
@@ -223,6 +239,13 @@ public class Menu {
                 if (matcher.matches()) {
                     KeyGenerator keyGenerator = new KeyGenerator(main);
                     keyGenerator.generateKeys(main.getFolder() + "keyCrypto/" + key, main.getBitLength(), this);
+                    if(publicKey != null && privateKey != null){
+                        System.out.println("#   Loaded public  key: "  + key + "_pub.key" );
+                        System.out.println("#   Loaded private key: "  + key + "_pri.key" );
+                        presentKey = key;
+                        presentKeyType = "_pri.key";
+                        presentKeyKey = privateKey;
+                    }
                     choiceOfMenu = 301;
                     break;
                 } else {
@@ -235,9 +258,19 @@ public class Menu {
     }
 
     void menu401() {
+        switch (menu601()){
+            case 1 -> {
+                presentKeyType = "_pri.key";
+                presentKeyKey = privateKey;
+            }
+            case 2 -> {
+                presentKeyType = "_pub.key";
+                presentKeyKey = publicKey;
+            }
+        }
         System.out.println("Menu 401");
         System.out.println("#");
-        System.out.println("#");
+        System.out.println("#   >> Loaded key: " + presentKey + presentKeyType);
         System.out.println("#");
         System.out.println("#   Please enter the message you want to encrypt:");
         System.out.println("#");
@@ -247,12 +280,9 @@ public class Menu {
             String message = userIn.nextLine();
             if (!message.isEmpty()) {
                 Crypto crypto = new Crypto(main);
-
-                String encrypted = crypto.encrypt(message, privateKey);
-                System.out.println("Here you go! Your encrypted message:");
+                String encrypted = crypto.encrypt(message, presentKeyKey);
+                System.out.println("#   Here you go! Your encrypted message:");
                 System.out.println(encrypted);
-
-
                 choiceOfMenu = 301;
                 break;
             } else {
@@ -262,6 +292,16 @@ public class Menu {
     }
 
     void menu402() {
+        switch (menu601()){
+            case 1 -> {
+                presentKeyType = "_pri.key";
+                presentKeyKey = privateKey;
+            }
+            case 2 -> {
+                presentKeyType = "_pub.key";
+                presentKeyKey = publicKey;
+            }
+        }
         System.out.println("Menu 402");
         System.out.println("#");
         System.out.println("#");
@@ -274,12 +314,9 @@ public class Menu {
             String message = userIn.nextLine();
             if (!message.isEmpty()) {
                 Crypto crypto = new Crypto(main);
-
-                String decrypted = crypto.decrypt(message, publicKey);
-                System.out.println("Here you go! Your decrypted message:");
+                String decrypted = crypto.decrypt(message, presentKeyKey);
+                System.out.println("#   Here you go! Your decrypted message:");
                 System.out.println(decrypted);
-
-
                 choiceOfMenu = 301;
                 break;
             } else {
@@ -316,6 +353,16 @@ public class Menu {
     }
 
     void menu404() {
+        switch (menu601()){
+            case 1 -> {
+                presentKeyType = "_pri.key";
+                presentKeyKey = privateKey;
+            }
+            case 2 -> {
+                presentKeyType = "_pub.key";
+                presentKeyKey = publicKey;
+            }
+        }
         System.out.println("Menu 404");
         System.out.println("#");
         System.out.println("#");
@@ -329,7 +376,7 @@ public class Menu {
             if (!message.isEmpty()) {
                 Crypto crypto = new Crypto(main);
 
-                String encrypted = crypto.encrypt(message, privateKey);
+                String encrypted = crypto.encrypt(message, presentKeyKey);
 
                 Date date = new Date();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -337,15 +384,14 @@ public class Menu {
 
                 FileOutputStream fileOut = null;
                 try {
-                    fileOut = new FileOutputStream(main.getFolder() + "postCrypto/" + strTime + ".txt");
-                    ObjectOutputStream out = new ObjectOutputStream(fileOut);
-                    out.writeObject(encrypted);
-                    out.close();
+                    FileWriter fw = new FileWriter(main.getFolder() + "postCrypto/" + strTime + ".txt", StandardCharsets.UTF_8);
+                    fw.write(encrypted);
+                    fw.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                System.out.println("saved key as: " + main.getFolder() + "postCrypto/" + strTime + ".txt");
 
+                System.out.println("#   Saved your encryption to file: " + strTime + ".txt");
                 choiceOfMenu = 301;
                 break;
             } else {
@@ -355,6 +401,16 @@ public class Menu {
     }
 
     void menu405() {
+        switch (menu601()){
+            case 1 -> {
+                presentKeyType = "_pri.key";
+                presentKeyKey = privateKey;
+            }
+            case 2 -> {
+                presentKeyType = "_pub.key";
+                presentKeyKey = publicKey;
+            }
+        }
         System.out.println("Menu 405");
         System.out.println("#");
         System.out.println("#");
@@ -407,7 +463,6 @@ public class Menu {
                 String message ="";
                 String ff = main.getFolder() + "preCrypto/" + key;
                 //läsa från txt-filen.
-
                 try {
                     Scanner sc = new Scanner(new File(ff));
                     while (sc.hasNextLine()){
@@ -419,8 +474,7 @@ public class Menu {
 
                 //kryptera och läsa till ny fil
                 Crypto crypto = new Crypto(main);
-
-                String encrypted = crypto.encrypt(message, privateKey);
+                String encrypted = crypto.encrypt(message, presentKeyKey);
 
                 Date date = new Date();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -428,19 +482,13 @@ public class Menu {
 
                 FileOutputStream fileOut = null;
                 try {
-                    fileOut = new FileOutputStream(main.getFolder() + "postCrypto/" + strTime + ".txt");
-                    ObjectOutputStream out = new ObjectOutputStream(fileOut);
-                    out.writeObject(encrypted);
-                    out.close();
+                    FileWriter fw = new FileWriter(main.getFolder() + "postCrypto/" + strTime + ".txt", StandardCharsets.UTF_8);
+                    fw.write(encrypted);
+                    fw.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                System.out.println("saved key as: " + main.getFolder() + "postCrypto/" + strTime + ".txt");
-                //
-
-
-
-
+                System.out.println("#   Saved encrypted file as: " + strTime + ".txt");
                 choiceOfMenu = 301;
                 break;
             } else {
@@ -450,6 +498,16 @@ public class Menu {
     }
 
     void menu406() {
+        switch (menu601()){
+            case 1 -> {
+                presentKeyType = "_pri.key";
+                presentKeyKey = privateKey;
+            }
+            case 2 -> {
+                presentKeyType = "_pub.key";
+                presentKeyKey = publicKey;
+            }
+        }
         System.out.println("Menu 406");
         System.out.println("#");
         System.out.println("#");
@@ -495,8 +553,23 @@ public class Menu {
             }
             if (uniqueFiles.contains(key)) {
                 usableKeyName = true;
-                System.out.println("all good");
 
+                String ff = main.getFolder() + "postCrypto/" + key;
+
+                //läsa från txt-filen.
+                try {
+                    byte[] bytes = Files.readAllBytes(Paths.get(ff));
+                    // convert bytes to string
+                    String content = new String(bytes);
+
+                    Crypto crypto = new Crypto(main);
+                    String decrypted = crypto.decrypt(content, presentKeyKey);
+                    System.out.println("#   Here you go! Your decrypted message:");
+                    System.out.println(decrypted);
+
+                } catch (IOException i){
+                    i.printStackTrace();
+                }
 
                 choiceOfMenu = 301;
                 break;
@@ -504,6 +577,36 @@ public class Menu {
                 System.out.println("Bad input");
             }
         }
+    }
+
+    int menu601() {
+        boolean loop = true;
+        int choice = 0;
+        System.out.println("Menu 601");
+        System.out.println("#");
+        System.out.println("#");
+        System.out.println("#");
+        System.out.println("#   Loaded key is: " + presentKey);
+        System.out.println("#");
+        System.out.println("#   Which key do you want to use?");
+        System.out.println("#");
+        System.out.println("#   1. PRIVATE");
+        System.out.println("#   2. PUBLIC");
+        Scanner userInput = new Scanner(System.in);
+        while (loop) {
+            switch (userInput.nextInt()) {
+                case 1 -> {
+                    choice = 1;
+                    loop = false;
+                }
+                case 2 -> {
+                    choice = 2;
+                    loop = false;
+                }
+                default -> System.out.println("Bad input");
+            }
+        }
+        return choice;
     }
 
     void menu901() {

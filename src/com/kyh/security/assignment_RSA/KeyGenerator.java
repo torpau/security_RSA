@@ -30,6 +30,8 @@ public class KeyGenerator {
         KeyFiles keyFiles = new KeyFiles(main);
         keyFiles.saveKey(fileName + "_pub.key", publicKey);
         keyFiles.saveKey(fileName + "_pri.key", privateKey);
+        menu.setPrivateKey(privateKey);
+        menu.setPublicKey(publicKey);
     }
 
 }

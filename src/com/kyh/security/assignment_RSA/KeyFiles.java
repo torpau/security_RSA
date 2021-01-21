@@ -18,7 +18,7 @@ public class KeyFiles {
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(key);
             out.close();
-            System.out.println("saved key as: " + fileName);
+            //System.out.println("saved key as: " + fileName);
 
         } catch (IOException fileNotFoundException) {
             fileNotFoundException.printStackTrace();
@@ -32,7 +32,7 @@ public class KeyFiles {
             ObjectInputStream in = new ObjectInputStream(fileIn);
             key = (KeyPair) in.readObject();
             in.close();
-            System.out.println("read key from: " + fileName);
+            //System.out.println("read key from: " + fileName);
         } catch (IOException | ClassNotFoundException i){
             i.printStackTrace();
         }
