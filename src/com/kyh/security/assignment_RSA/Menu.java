@@ -469,7 +469,7 @@ public class Menu {
                 if (listOfFiles != null && listOfFiles.length > 0) {
                     for (File elements : listOfFiles) {
                         if (elements.isFile() && elements.canRead()) {
-                            if (elements.getName().substring(elements.getName().length() - 4).equals(".txt") && !elements.getName().equals("readMe.txt")) {
+                            if (elements.getName().endsWith(".txt") && !elements.getName().equals("readMe.txt")) {
                                 uniqueFiles.add(elements.getName());
                             }
                         }
@@ -494,7 +494,7 @@ public class Menu {
             String key = userInput.nextLine();
             if (!key.isEmpty()) {
                 key = key.toLowerCase();
-                if (key.length() > 4 && !key.substring(key.length()-4).equals(".txt")){
+                if (!key.endsWith(".txt")){
                     key += ".txt";
                 }
             }
@@ -605,9 +605,10 @@ public class Menu {
 
                 //läsa från txt-filen.
                 try {
-                    byte[] bytes = Files.readAllBytes(Paths.get(ff));
-                    // convert bytes to string
-                    String content = new String(bytes);
+                    FileInputStream infil = new FileInputStream(ff);
+                    byte[] contentBytes  = infil.readAllBytes();
+                    String content = new String(contentBytes, StandardCharsets.UTF_8);
+                    infil.close();
 
                     Crypto crypto = new Crypto(main);
                     String decrypted = crypto.decrypt(content, presentKeyKey);

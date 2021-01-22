@@ -11,15 +11,12 @@ public class KeyFiles {
         this.main = main;
     }
 
-
     void saveKey(String fileName, KeyPair key){
         try {
             FileOutputStream fileOut = new FileOutputStream(fileName);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(key);
             out.close();
-            //System.out.println("saved key as: " + fileName);
-
         } catch (IOException fileNotFoundException) {
             fileNotFoundException.printStackTrace();
         }
@@ -27,15 +24,10 @@ public class KeyFiles {
 
     KeyPair readKey(String fileName) throws IOException, ClassNotFoundException{
         KeyPair key = null;
-        //try {
             FileInputStream fileIn = new FileInputStream(fileName);
             ObjectInputStream in = new ObjectInputStream(fileIn);
             key = (KeyPair) in.readObject();
             in.close();
-            //System.out.println("read key from: " + fileName);
-        //} catch (IOException | ClassNotFoundException i){
-         //   i.printStackTrace();
-        //}
         return key;
     }
 
