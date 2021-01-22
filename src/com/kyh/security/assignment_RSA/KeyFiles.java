@@ -25,17 +25,17 @@ public class KeyFiles {
         }
     }
 
-    KeyPair readKey(String fileName){
+    KeyPair readKey(String fileName) throws IOException, ClassNotFoundException{
         KeyPair key = null;
-        try {
+        //try {
             FileInputStream fileIn = new FileInputStream(fileName);
             ObjectInputStream in = new ObjectInputStream(fileIn);
             key = (KeyPair) in.readObject();
             in.close();
             //System.out.println("read key from: " + fileName);
-        } catch (IOException | ClassNotFoundException i){
-            i.printStackTrace();
-        }
+        //} catch (IOException | ClassNotFoundException i){
+         //   i.printStackTrace();
+        //}
         return key;
     }
 

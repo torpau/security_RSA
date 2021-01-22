@@ -108,7 +108,9 @@ public class Menu {
         border();
         if (!listOfKeys.isEmpty()) {
             System.out.println("#");
-            System.out.println("#");
+            if(!presentKey.equals("")) {
+                System.out.println("#   >> Loaded key: " + presentKey);
+            }
             System.out.println("#");
             System.out.println("#   Which of the following saved keys:");
             System.out.println("#");
@@ -130,16 +132,29 @@ public class Menu {
                 usableKeyName = true;
 
                 KeyFiles keyFiles = new KeyFiles(main);
-                String test = main.getFolder() + key + "_pub.key";
-                publicKey = keyFiles.readKey(main.getFolder() + "keyCrypto/" + key + "_pub.key");
-                privateKey = keyFiles.readKey(main.getFolder() + "keyCrypto/" + key + "_pri.key");
-                if(publicKey != null && privateKey != null){
+
+                try {
+                    publicKey = keyFiles.readKey(main.getFolder() + "keyCrypto/" + key + "_pub.key");
                     System.out.println("#   Loaded public  key: "  + key + "_pub.key" );
+                    presentKey = key;
+                    presentKeyType = "_pub.key";
+                    presentKeyKey = publicKey;
+                } catch (Exception e) {
+                    publicKey = null;
+                    System.out.println("#   Loaded public  key: <NO SUCH FILE>");
+                }
+
+                try {
+                    privateKey = keyFiles.readKey(main.getFolder() + "keyCrypto/" + key + "_pri.key");
                     System.out.println("#   Loaded private key: "  + key + "_pri.key" );
                     presentKey = key;
                     presentKeyType = "_pri.key";
                     presentKeyKey = privateKey;
+                } catch (Exception e) {
+                    privateKey = null;
+                    System.out.println("#   Loaded private key: <NO SUCH FILE>");
                 }
+
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
@@ -322,6 +337,8 @@ public class Menu {
         border();
         System.out.println("#");
         System.out.println("#");
+        System.out.println("#   >> Loaded key: " + presentKey + presentKeyType);
+        System.out.println("#");
         System.out.println("#   Please enter the message you want to decrypt:");
         System.out.println("#");
 
@@ -385,6 +402,8 @@ public class Menu {
         border();
         System.out.println("#");
         System.out.println("#");
+        System.out.println("#   >> Loaded key: " + presentKey + presentKeyType);
+        System.out.println("#");
         System.out.println("#   Please enter the message you want to encrypt:");
         System.out.println("#");
 
@@ -436,6 +455,7 @@ public class Menu {
         }
         border();
         System.out.println("#");
+        System.out.println("#   >> Loaded key: " + presentKey + presentKeyType);
         System.out.println("#");
         System.out.println("#   Here is a list of un-encrypted txt files:");
         System.out.println("#");
@@ -449,7 +469,7 @@ public class Menu {
                 if (listOfFiles != null && listOfFiles.length > 0) {
                     for (File elements : listOfFiles) {
                         if (elements.isFile() && elements.canRead()) {
-                            if (elements.getName().substring(elements.getName().length() - 4).equals(".txt")) {
+                            if (elements.getName().substring(elements.getName().length() - 4).equals(".txt") && !elements.getName().equals("readMe.txt")) {
                                 uniqueFiles.add(elements.getName());
                             }
                         }
@@ -537,6 +557,7 @@ public class Menu {
         }
         border();
         System.out.println("#");
+        System.out.println("#   >> Loaded key: " + presentKey + presentKeyType);
         System.out.println("#");
         System.out.println("#   Here is a list of encrypted txt files:");
         System.out.println("#");
@@ -549,7 +570,7 @@ public class Menu {
                 File[] listOfFiles = folder.listFiles();
                 if (listOfFiles != null && listOfFiles.length > 0) {
                     for (File elements : listOfFiles) {
-                        if (elements.isFile() && elements.canRead()) {
+                        if (elements.isFile() && elements.canRead() && !elements.getName().equals("readMe.txt")) {
                             uniqueFiles.add(elements.getName());
                         }
                     }
@@ -612,10 +633,13 @@ public class Menu {
     int menu601() {
         boolean loop = true;
         int choice = 0;
+        if (publicKey == null || privateKey == null){
+            return choice;
+        }
         border();
         System.out.println("#");
         System.out.println("#");
-        System.out.println("#   Loaded key is: " + presentKey);
+        System.out.println("#   Loaded key is: " + presentKey + presentKeyType);
         System.out.println("#");
         System.out.println("#   Which key do you want to use?");
         System.out.println("#");

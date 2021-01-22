@@ -1,4 +1,6 @@
 .idea
 out
-src/com/kyh/security/assignment_RSA/keyFiles/keyCrypto/torsten_pri.key
-
+*.key
+*.txt
+!*/torsten_pub.key
+!*/20210122165959.txt
