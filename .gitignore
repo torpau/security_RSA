@@ -5,4 +5,4 @@ out
 !*/torsten_pub.key
 !*/20210124233940.txt
 !*/postCrypto/readMe.txt
-!*/preCrypto/readMe.txt
+!./src/com/kyh/security/assignment_RSA/keyFiles/postCrypto/readMe.txt
