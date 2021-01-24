@@ -4,3 +4,5 @@ out
 *.txt
 !*/torsten_pub.key
 !*/20210124233940.txt
+!*/postCrypto/readMe.txt
+!*/preCrypto/readMe.txt
