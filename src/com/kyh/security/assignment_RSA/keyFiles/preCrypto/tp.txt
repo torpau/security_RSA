@@ -1,0 +1,1 @@
+Hello! Just leaving you a little message. (even though i used my private key to encrypt) My public key should be here somewhere... Imagefunction does not work. There seem to be a problem with the en-/decryption. Do not get the same byteArray?! Would appreciate if you can take a look at it with me...?!  Br, Torsten
