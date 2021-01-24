@@ -1,11 +1,15 @@
 package com.kyh.security.assignment_RSA;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -53,6 +57,7 @@ public class Menu {
                 case 404 -> menu404();
                 case 405 -> menu405();
                 case 406 -> menu406();
+                case 501 -> menu501();
                 case 901 -> menu901();
 
             }
@@ -206,6 +211,7 @@ public class Menu {
         System.out.println("#   2. Decrypt a typed message!");
         System.out.println("#   3. Encrypt a message to a txt file!");
         System.out.println("#   4. Decrypt a message from a txt file!");
+        System.out.println("#   5. Image en-/decrypt with copy of image ( NOT WORKING )");
         System.out.println("#   7. Change key!");
         System.out.println("#   9. Exit");
         Scanner userInput = new Scanner(System.in);
@@ -225,6 +231,10 @@ public class Menu {
                 }
                 case 4 -> {
                     choiceOfMenu = 406;
+                    loop = false;
+                }
+                case 5 -> {
+                    choiceOfMenu = 501;
                     loop = false;
                 }
                 case 7 -> {
@@ -630,6 +640,52 @@ public class Menu {
             }
         }
     }
+
+    void menu501(){
+        /*
+        try {
+
+            FileInputStream inputFile = new FileInputStream("./src/com/kyh/security/assignment_RSA/keyFiles/ring.jpg");
+            byte[] imageContentAsBytes  = inputFile.readAllBytes();
+            String imageContentAsString = Arrays.toString(imageContentAsBytes);
+            inputFile.close();
+
+            Crypto crypto = new Crypto(main);
+            String imageContentAsStringEncrypted = (new BigInteger(imageContentAsString.getBytes(StandardCharsets.UTF_8))).modPow(publicKey.getKey(), publicKey.getN()).toString();
+
+            PrintStream out = new PrintStream(new FileOutputStream("./src/com/kyh/security/assignment_RSA/keyFiles/testfile.txt"));
+            out.print(imageContentAsStringEncrypted);
+
+        // --------------------------------------
+
+            File file = new File("./src/com/kyh/security/assignment_RSA/keyFiles/testfile.txt");
+            Scanner sc = new Scanner(file);
+            String contentFromTextFile = "";
+            while (sc.hasNextLine()) {
+                contentFromTextFile += sc.nextLine();
+            }
+
+            String imageContentAsStringDecrypted = new String((new BigInteger(new String(contentFromTextFile.getBytes(StandardCharsets.UTF_8)))).modPow(publicKey.getKey(), publicKey.getN()).toByteArray());
+            byte[] imageContentAsBytesDecrypted = imageContentAsStringDecrypted.getBytes();
+
+            BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageContentAsBytesDecrypted) );
+            ImageIO.write(image, "JPG", new File("./src/com/kyh/security/assignmenst_RSA/keyFiles/ring_copy.jpg"));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        1
+         */
+        choiceOfMenu = 301;
+    }
+
+
 
     int menu601() {
         boolean loop = true;
