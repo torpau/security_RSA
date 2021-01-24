@@ -1,8 +1,8 @@
 .idea
 out
 *.key
-*.txt
 !*/torsten_pub.key
+*.txt
 !*/20210124233940.txt
-!*/postCrypto/readMe.txt
 !./src/com/kyh/security/assignment_RSA/keyFiles/postCrypto/readMe.txt
+!./src/com/kyh/security/assignment_RSA/keyFiles/preCrypto/readMe.txt
