@@ -1,4 +1,7 @@
 .idea
 out
 
+*.key
 !*/torsten_pub.key
+*.txt
+!*/readMe.txt

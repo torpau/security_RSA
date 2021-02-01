@@ -642,34 +642,71 @@ public class Menu {
     }
 
     void menu501(){
-        /*
+
         try {
 
             FileInputStream inputFile = new FileInputStream("./src/com/kyh/security/assignment_RSA/keyFiles/ring.jpg");
             byte[] imageContentAsBytes  = inputFile.readAllBytes();
-            String imageContentAsString = Arrays.toString(imageContentAsBytes);
+
+            byte[] imageContentAsBytes2 = new byte[imageContentAsBytes.length-1];
+            for(int i = 0; i < imageContentAsBytes.length-1; i++) {
+                imageContentAsBytes2[i] = imageContentAsBytes[i + 1];
+            }
+            String imageContentAsString = Arrays.toString(imageContentAsBytes2);
             inputFile.close();
 
-            Crypto crypto = new Crypto(main);
-            String imageContentAsStringEncrypted = (new BigInteger(imageContentAsString.getBytes(StandardCharsets.UTF_8))).modPow(publicKey.getKey(), publicKey.getN()).toString();
 
-            PrintStream out = new PrintStream(new FileOutputStream("./src/com/kyh/security/assignment_RSA/keyFiles/testfile.txt"));
-            out.print(imageContentAsStringEncrypted);
+
+
+            // --- for testing ---
+            for(int i = 0; i < 10; i++) {
+                System.out.print(imageContentAsBytes[i] + ", ");
+            }
+            System.out.print(". . . ");
+            for(int i = imageContentAsBytes.length-11; i < imageContentAsBytes.length-2; i++) {
+                System.out.print(imageContentAsBytes[i] + ", ");
+            }
+            System.out.println("");
+//
+            BigInteger test = new BigInteger(imageContentAsBytes2);
+            byte[] test2 = test.toByteArray();
+//
+
+            for(int i = 0; i < 10; i++) {
+                System.out.print(test2[i] + ", ");
+            }
+            System.out.print(". . . ");
+            for(int i = test2.length-11; i < test2.length-2; i++) {
+                System.out.print(test2[i] + ", ");
+            }
+            System.out.println("");
+            System.out.println("Ja, här ser man att början på byteArrayen inte är likadana... men slutet är ?!");
+            // --- --- --- --- ---
+
+
+
+            Crypto crypto = new Crypto(main);
+            String imageContentAsStringEncrypted = crypto.encrypt( imageContentAsString, privateKey);
+
+            //PrintStream out = new PrintStream(new FileOutputStream("./src/com/kyh/security/assignment_RSA/keyFiles/testfile.txt"));
+            //out.print(imageContentAsStringEncrypted);
 
         // --------------------------------------
-
+/*
             File file = new File("./src/com/kyh/security/assignment_RSA/keyFiles/testfile.txt");
             Scanner sc = new Scanner(file);
             String contentFromTextFile = "";
             while (sc.hasNextLine()) {
                 contentFromTextFile += sc.nextLine();
             }
-
-            String imageContentAsStringDecrypted = new String((new BigInteger(new String(contentFromTextFile.getBytes(StandardCharsets.UTF_8)))).modPow(publicKey.getKey(), publicKey.getN()).toByteArray());
+ */
+            String imageContentAsStringDecrypted = crypto.decrypt(imageContentAsStringEncrypted, publicKey);
             byte[] imageContentAsBytesDecrypted = imageContentAsStringDecrypted.getBytes();
 
-            BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageContentAsBytesDecrypted) );
-            ImageIO.write(image, "JPG", new File("./src/com/kyh/security/assignmenst_RSA/keyFiles/ring_copy.jpg"));
+
+
+            //BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageContentAsBytesDecrypted) );
+            //ImageIO.write(image, "JPG", new File("./src/com/kyh/security/assignmenst_RSA/keyFiles/ring_copy.jpg"));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -680,8 +717,7 @@ public class Menu {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        1
-         */
+
         choiceOfMenu = 301;
     }
 
